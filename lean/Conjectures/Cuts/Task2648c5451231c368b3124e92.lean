@@ -10,7 +10,9 @@ private theorem phase_orth (k j : ℕ) :
     unfold phase
     rw [Complex.star_def, ← Complex.exp_conj, ← Complex.exp_add]
     congr 1
-    simp [a, map_mul]
+    have htwo : (starRingEnd ℂ) (2 : ℂ) = 2 := by
+      simpa only [Nat.cast_ofNat] using (map_natCast (starRingEnd ℂ) 2)
+    simp [a, map_mul, htwo]
     <;> ring
   simp_rw [h]
   by_cases hk : k = j
@@ -27,6 +29,7 @@ private theorem phase_orth (k j : ℕ) :
 
 theorem Conjectures.Cuts.Task2648c5451231c368b3124e92 : (have x1 : ℕ → ℝ → ℂ := fun (x1 : ℕ) (x2 : ℝ) => Complex.exp ((2 : ℂ) * ↑Real.pi * Complex.I * ↑x1 * ↑x2); ∀ (x2 : Finset ℕ) (x3 : ℕ → ℂ) (x4 : ℕ), ∫ (x5 : ℝ) in (0 : ℝ)..(1 : ℝ), (∏ x6 ∈ x2, ((1 : ℂ) + x3 x6 * x1 (1 : ℕ) x5)) * Star.star (x1 x4 x5) = ∑ x5 ∈ Finset.powersetCard x4 x2, ∏ x6 ∈ x5, x3 x6) := by
   classical
+  dsimp only
   intro A c j
   change (∫ t in (0 : ℝ)..1, (∏ i ∈ A, (1 + c i * phase 1 t)) * star (phase j t)) = _
   have pow_phase (k : ℕ) (t : ℝ) : phase 1 t ^ k = phase k t := by
